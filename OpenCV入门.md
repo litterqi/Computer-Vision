@@ -42,4 +42,19 @@ cv.waitKey()
 ![image](https://github.com/litterqi/Computer-Vision/assets/123362884/58c9bd56-b2f0-4381-b47b-4addc8c8503f)
 ![image](https://github.com/litterqi/Computer-Vision/assets/123362884/c4dca55b-5a2e-4d56-b625-3964d7e454ff)
 
+将三张图像的平方和做加权平均，即得到灰度图：
+```
+gray=cv.cvtColor(img,cv.COLOR_BGR2GRAY)
+cv.imshow("gray",gray)
+cv.waitKey()
+```
+![image](https://github.com/litterqi/Computer-Vision/assets/123362884/72f09874-0b78-420c-b984-27738ab5570d)
 
+### 图像裁剪
+使用索引(先行后列)对图片进行裁剪，等价于画图软件中的裁剪工具：
+```
+cut=img[50:200,100:300]
+cv.imshow("cut",cut)
+cv.waitKey()
+```
+![image](https://github.com/litterqi/Computer-Vision/assets/123362884/5d3a75ca-d9d3-4030-b5c1-e8d1409ea7a7)

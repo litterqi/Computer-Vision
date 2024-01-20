@@ -126,3 +126,69 @@ cv.imshow("canny",canny)
 cv.waitKey()
 ```
 ![image](https://github.com/litterqi/Computer-Vision/assets/123362884/fe2d9477-93c3-4cf5-b1c2-49902b833cc9)
+
+### 图像二值化
+阈值算法把灰度图片根据阈值分为黑与白。最简单的二值化处理是定义一个固定的阈值。
+
+对于灰度分布不均匀的图片，可以调用adaptiveThreshold函数来使用自适应阈值算法，也就是把图片分成很多区域，每个区域独立计算阈值。可以看到更多的文字显示了出来。
+
+还可以使用大津算法(ostu)来自动计算适当的阈值，即不需要人为定义阈值，使得分离出的两个灰度分布差异最大化。
+```
+gray=cv.imread("../kaggle/bookpage.jpg",cv.IMREAD_GRAYSCALE)
+ret, binary =cv.threshold(gray,10,255,cv.THRESH_BINARY)
+
+binary_adaptive=cv.adaptiveThreshold(gray,255,cv.ADAPTIVE_THRESH_GAUSSIAN_C,cv.THRESH_BINARY,115,1)
+
+ret1, binary_otsu =cv.threshold(gray,0,255,cv.THRESH_BINARY+cv.THRESH_OTSU)
+
+cv.imshow("gray",gray)
+cv.imshow("binary",binary)
+cv.imshow("binary_adaptive",binary_adaptive)
+cv.imshow("otsu",binary_otsu)
+
+cv.waitKey()
+```
+![image](https://github.com/litterqi/Computer-Vision/assets/123362884/80af1956-d266-472c-b1ed-102c9a80e817)
+![image](https://github.com/litterqi/Computer-Vision/assets/123362884/a47d692b-cf41-405c-8caf-ccf0676dd0dc)
+![image](https://github.com/litterqi/Computer-Vision/assets/123362884/ee34f10e-390d-4ab2-8d01-993815ea5dff)
+![image](https://github.com/litterqi/Computer-Vision/assets/123362884/6c30325e-eb8c-4804-b284-ca6bfc7cbda1)
+
+### 图像形态学之腐蚀和膨胀
+首先对灰度图进行二值化操作得到binary图，然后定义一个操作和kernel为5*5像素的正方形。使用该kernel腐蚀binary图像。可以发现图标的边缘瘦了一圈，就像被腐蚀了一样。使用类似是方法可以进行图像的膨胀操作，可以发现图标的边缘胖了一圈，即为膨胀。
+```
+gray=cv.imread("../kaggle/opencv_logo.jpg",cv.IMREAD_GRAYSCALE)
+
+_, binary =cv.threshold(gray,200,255,cv.THRESH_BINARY_INV)
+
+kernel=np.ones((5,5),np.uint8)
+
+erosion=cv.erode(binary,kernel)
+dilation=cv.dilate(binary,kernel)
+
+cv.imshow("binary",binary)
+cv.imshow("erosion",erosion)
+cv.imshow("dilation",dilation)
+
+cv.waitKey()
+```
+![image](https://github.com/litterqi/Computer-Vision/assets/123362884/2fb1a009-5b8c-43e1-9fe0-38c1d5c0a92c)
+![image](https://github.com/litterqi/Computer-Vision/assets/123362884/210e5463-c490-48ea-b4cf-fd7fcde9848d)
+![image](https://github.com/litterqi/Computer-Vision/assets/123362884/5c5509c9-191e-46c8-a0a3-db17784eae0a)
+
+通过交替使用腐蚀和膨胀，可以实现更多的图形学变化。
+### 调用电脑摄像头
+使用VideoCapture函数获取摄像头的指针，需要传入调用的摄像头的序号(第一个摄像头的序号为0)。与读取静态图片不同，对摄像头画面的采集是连续的，即要循环读取每一帧的画面。
+
+在while循环中，使用read函数读取画面并将其展示出来。等待键盘输入一毫秒，如果键盘输入任意键，即跳出循环。最后释放capture指针。
+```
+capture=cv.VideoCapture(0)
+
+while True:
+    ret, frame =capture.read()
+    cv.imshow("camera",frame)
+    key=cv.waitKey(1)
+    if key!=-1:
+        break
+
+capture.release()
+```
